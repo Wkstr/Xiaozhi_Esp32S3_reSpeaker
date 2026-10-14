@@ -1,8 +1,13 @@
 #include "no_audio_codec.h"
+#include "config.h"
 
 #include <esp_log.h>
 #include <cmath>
 #include <cstring>
+
+#ifndef AUDIO_I2S_SLAVE_MODE
+#define AUDIO_I2S_SLAVE_MODE 0
+#endif
 
 #define TAG "NoAudioCodec"
 
@@ -22,7 +27,7 @@ NoAudioCodecDuplex::NoAudioCodecDuplex(int input_sample_rate, int output_sample_
 
     i2s_chan_config_t chan_cfg = {
         .id = I2S_NUM_0,
-        .role = I2S_ROLE_MASTER,
+        .role = AUDIO_I2S_SLAVE_MODE ? I2S_ROLE_SLAVE : I2S_ROLE_MASTER,
         .dma_desc_num = AUDIO_CODEC_DMA_DESC_NUM,
         .dma_frame_num = AUDIO_CODEC_DMA_FRAME_NUM,
         .auto_clear_after_cb = true,
